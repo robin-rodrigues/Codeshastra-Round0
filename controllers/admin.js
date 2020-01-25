@@ -5,6 +5,7 @@ const fileHelper = require('../util/file');
 const { validationResult } = require('express-validator/check');
 
 const Profile = require('../models/profile');
+const Ngo = require('../models/ngo');
 
 exports.getAddProfile = (req, res, next) => {
   res.render('admin/edit-product', {
@@ -180,16 +181,16 @@ exports.postEditProduct = (req, res, next) => {
     });
 };
 
-exports.getProducts = (req, res, next) => {
-  Product.find({ userId: req.user._id })
+exports.getNgos = (req, res, next) => {
+  Ngo.find({})
     // .select('title price -_id')
     // .populate('userId', 'name')
-    .then(products => {
-      console.log(products);
-      res.render('admin/products', {
-        prods: products,
-        pageTitle: 'Admin Products',
-        path: '/admin/products'
+    .then(ngos => {
+       console.log(ngos);
+      res.render('admin/ngos', {
+        ngos: ngos,
+        pageTitle: 'Ngos',
+        path: '/admin/ngos'
       });
     })
     .catch(err => {
