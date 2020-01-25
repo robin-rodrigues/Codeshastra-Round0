@@ -7,10 +7,6 @@ const ngoSchema = new Schema({
     type: String,
     required: true
   },
-  imageUrl: {
-    type: String,
-    required: true
-  },
   city: {
     type: String,
     required: true

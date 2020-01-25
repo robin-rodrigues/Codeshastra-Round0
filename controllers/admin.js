@@ -21,19 +21,19 @@ exports.getAddProfile = (req, res, next) => {
 exports.postAddProfile = (req, res, next) => {
   const name = req.body.name;
   const image = req.file;
-  const amount =  req.body.amount;
+  const amount = req.body.amount;
   const reason = req.body.reason;
   const number = req.body.number;
   const address = req.body.address;
 
-  
+
   if (!image) {
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
       editing: false,
       hasError: true,
-     profile: {
+      profile: {
         name: name,
         amount: amount,
         reason: reason,
@@ -183,21 +183,21 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.getNgos = (req, res, next) => {
   Ngo.find({})
-    // .select('title price -_id')
-    // .populate('userId', 'name')
-    .then(ngos => {
-       console.log(ngos);
-      res.render('admin/ngos', {
-        ngos: ngos,
-        pageTitle: 'Ngos',
-        path: '/admin/ngos'
-      });
-    })
-    .catch(err => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    });
+  // .select('title price -_id')
+  // .populate('userId', 'name')
+  .then(ngos => {
+  console.log(ngos)
+  res.render('admin/ngos', {
+    ngs: ngos,
+    pageTitle: 'Ngos',
+    path: '/admin/ngos'
+  });
+  })
+  .catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 exports.deleteProduct = (req, res, next) => {
