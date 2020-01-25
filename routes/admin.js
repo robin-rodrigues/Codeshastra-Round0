@@ -12,7 +12,7 @@ const router = express.Router();
 router.get('/add-profile', isAuth, adminController.getAddProfile);
 
 // /admin/products => GET
-router.get('/products', isAuth, adminController.getProducts);
+router.get('/ngos', isAuth, adminController.getNgos);
 
 // /admin/add-product => POST
 router.post(
