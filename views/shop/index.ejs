@@ -24,7 +24,19 @@
                         <div class="card__actions">
                             <a href="/products/<%= product._id %>" class="btn">Details</a>
                             <% if (isAuthenticated) { %>
-                                <%- include('../includes/add-to-cart.ejs', {product: product}) %>
+                                <div class="centered">
+                                    <form action="/create-order" method="POST">
+                                        <script
+                                          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                                          data-key="pk_test_2qmeMrRKGVQLdndQkU8T6XC000AGK4dk7w"
+                                          data-amount="100"
+                                          data-name="Your Order"
+                                          data-description="All the items you ordewred"
+                                          data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                                          data-locale="auto"
+                                          data-currency="usd"></script>
+                                      </form>
+                                </div>
                             <% } %>
                         </div>
                     </article>
