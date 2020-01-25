@@ -12,7 +12,7 @@ const flash = require('connect-flash');
 const multer = require('multer');
 
 const errorController = require('./controllers/error');
-const shopController = require('./controllers/shop');
+const shopController = require('./controllers/home');
 const isAuth = require('./middleware/is-auth');
 const User = require('./models/user');
 
@@ -50,7 +50,7 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
+const shopRoutes = require('./routes/home');
 const authRoutes = require('./routes/auth');
 
 app.use(bodyParser.urlencoded({ extended: false }));

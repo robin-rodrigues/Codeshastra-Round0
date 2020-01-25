@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema({
-  title: {
+const profileSchema = new Schema({
+  name: {
     type: String,
     required: true
   },
-  price: {
+  amount: {
     type: Number,
     required: true
   },
-  description: {
+  reason: {
     type: String,
     required: true
   },
@@ -19,6 +19,13 @@ const productSchema = new Schema({
     type: String,
     required: true
   },
+  number: {
+    type:String,
+  },
+  address: {
+    type: String
+  },
+
   userId: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -26,7 +33,7 @@ const productSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Profile', profileSchema);
 
 // const mongodb = require('mongodb');
 // const getDb = require('../util/database').getDb;

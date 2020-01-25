@@ -4,12 +4,12 @@ const fileHelper = require('../util/file');
 
 const { validationResult } = require('express-validator/check');
 
-const Product = require('../models/product');
+const Profile = require('../models/profile');
 
-exports.getAddProduct = (req, res, next) => {
+exports.getAddProfile = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
-    path: '/admin/add-product',
+    path: '/admin/add-profile',
     editing: false,
     hasError: false,
     errorMessage: null,
@@ -17,58 +17,66 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
-exports.postAddProduct = (req, res, next) => {
-  const title = req.body.title;
+exports.postAddProfile = (req, res, next) => {
+  const name = req.body.name;
   const image = req.file;
-  const price = req.body.price;
-  const description = req.body.description;
+  const amount =  req.body.amount;
+  const reason = req.body.reason;
+  const number = req.body.number;
+  const address = req.body.address;
+
+  
   if (!image) {
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
       editing: false,
       hasError: true,
-      product: {
-        title: title,
-        price: price,
-        description: description
+     profile: {
+        name: name,
+        amount: amount,
+        reason: reason,
+        number: number,
+        address: address
       },
       errorMessage: 'Attached file is not an image.',
       validationErrors: []
     });
   }
-  const errors = validationResult(req);
+  // const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    console.log(errors.array());
-    return res.status(422).render('admin/edit-product', {
-      pageTitle: 'Add Product',
-      path: '/admin/add-product',
-      editing: false,
-      hasError: true,
-      product: {
-        title: title,
-        price: price,
-        description: description
-      },
-      errorMessage: errors.array()[0].msg,
-      validationErrors: errors.array()
-    });
-  }
+  // if (!errors.isEmpty()) {
+  //   console.log(errors.array());
+  //   return res.status(422).render('admin/edit-product', {
+  //     pageTitle: 'Add Product',
+  //     path: '/admin/add-product',
+  //     editing: false,
+  //     hasError: true,
+  //     product: {
+  //       title: title,
+  //       price: price,
+  //       description: description
+  //     },
+  //     errorMessage: errors.array()[0].msg,
+  //     validationErrors: errors.array()
+  //   });
+  // }
 
   const imageUrl = image.path;
 
-  const product = new Product({
-    title: title,
-    price: price,
-    description: description,
+  const profile = new Profile({
+    name: name,
+    amount: amount,
+    reason: reason,
+    number: number,
+    address: address,
     imageUrl: imageUrl,
     userId: req.user
   });
-  product
+  profile
     .save()
     .then(result => {
-      // console.log(result);
+      console.log(result);
       console.log('Created Product');
       res.redirect('/admin/products');
     })
