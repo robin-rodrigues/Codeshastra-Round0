@@ -10,33 +10,33 @@
         <% if (errorMessage) { %>
             <div class="user-message user-message--error"><%= errorMessage %></div>
         <% } %>
-        <form class="login-form" action="/signup" method="POST" novalidate>
+        <form class="login-form" action="/ngo-signup" method="POST" novalidate>
             <div class="form-control">
                 <label for="email">E-Mail</label>
                 <input 
-                    class="<%= validationErrors.find(e => e.param === 'email') ? 'invalid' : '' %>"
+                    class="<%= validationErrors.find(e => e.param === 'ngoemail') ? 'invalid' : '' %>"
                     type="email" 
-                    name="email" 
-                    id="email" 
-                    value="<%= oldInput.email %>">
+                    name="ngoemail" 
+                    id="ngoemail" 
+                    value="<%= oldInput.ngoemail %>">
             </div>
             <div class="form-control">
                 <label for="password">Password</label>
                 <input 
-                    class="<%= validationErrors.find(e => e.param === 'password') ? 'invalid' : '' %>"
+                    class="<%= validationErrors.find(e => e.param === 'ngopassword') ? 'invalid' : '' %>"
                     type="password" 
-                    name="password" 
-                    id="password" 
-                    value="<%= oldInput.password %>">
+                    name="ngopassword" 
+                    id="ngopassword" 
+                    value="<%= oldInput.ngopassword %>">
             </div>
             <div class="form-control">
                 <label for="confirmPassword">Confirm Password</label>
                 <input 
-                    class="<%= validationErrors.find(e => e.param === 'confirmPassword') ? 'invalid' : '' %>"
+                    class="<%= validationErrors.find(e => e.param === 'ngoconfirmPassword') ? 'invalid' : '' %>"
                     type="password" 
-                    name="confirmPassword" 
-                    id="confirmPassword" 
-                    value="<%= oldInput.confirmPassword %>">
+                    name="ngoconfirmPassword" 
+                    id="ngoconfirmPassword" 
+                    value="<%= oldInput.ngoconfirmPassword %>">
             </div>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <button class="btn" type="submit">Signup</button>

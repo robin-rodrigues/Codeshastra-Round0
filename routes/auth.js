@@ -81,11 +81,11 @@ router.get('/ngo-signup', authController.getNgoSignup);
 router.post(
   '/ngo-login',
   [
-    body('email')
+    body('ngoemail')
       .isEmail()
       .withMessage('Please enter a valid email address.')
       .normalizeEmail(),
-    body('password', 'Password has to be valid.')
+    body('ngopassword', 'Password has to be valid.')
       .isLength({ min: 5 })
       .isAlphanumeric()
       .trim()
@@ -96,7 +96,7 @@ router.post(
 router.post(
   '/ngo-signup',
   [
-    check('email')
+    check('ngoemail')
       .isEmail()
       .withMessage('Please enter a valid email.')
       .custom((value, { req }) => {
@@ -104,8 +104,8 @@ router.post(
         //   throw new Error('This email address if forbidden.');
         // }
         // return true;
-        return User.findOne({ email: value }).then(userDoc => {
-          if (userDoc) {
+        return Ngo.findOne({ ngoemail: value }).then(ngoDoc => {
+          if (ngoDoc) {
             return Promise.reject(
               'E-Mail exists already, please pick a different one.'
             );
@@ -120,10 +120,10 @@ router.post(
       .isLength({ min: 5 })
       .isAlphanumeric()
       .trim(),
-    body('confirmPassword')
+    body('ngoconfirmPassword')
       .trim()
       .custom((value, { req }) => {
-        if (value !== req.body.password) {
+        if (value !== req.body.ngopassword) {
           throw new Error('Passwords have to match!');
         }
         return true;

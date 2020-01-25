@@ -187,16 +187,15 @@ exports.getNgos = (req, res, next) => {
     // .populate('userId', 'name')
     .then(ngos => {
        console.log(ngos);
-      res.render('admin/ngos', {
+      res.render('/admin/ngos', {
         ngos: ngos,
         pageTitle: 'Ngos',
         path: '/admin/ngos'
-      });
+      })
     })
     .catch(err => {
       const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      console.log(error);
     });
 };
 

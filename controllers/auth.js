@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
@@ -8,6 +6,8 @@ const sendgridTransport = require('nodemailer-sendgrid-transport');
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
+const Ngo = require('../models/ngo');
+
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
@@ -322,8 +322,8 @@ exports.getNgoSignup = (req, res, next) => {
 };
 
 exports.postNgoLogin = (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const ngoemail = req.body.ngoemail;
+  const ngopassword = req.body.ngopassword;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -332,33 +332,33 @@ exports.postNgoLogin = (req, res, next) => {
       pageTitle: 'NGO Login',
       errorMessage: errors.array()[0].msg,
       oldInput: {
-        email: email,
-        password: password
+        ngoemail: ngoemail,
+        ngopassword: ngopassword
       },
       validationErrors: errors.array()
     });
   }
 
-  User.findOne({ email: email })
-    .then(user => {
-      if (!user) {
+  Ngo.findOne({ ngoemail: ngoemail })
+    .then(ngo => {
+      if (!ngo) {
         return res.status(422).render('auth/ngo-login', {
           path: '/ngo-login',
           pageTitle: 'NGO Login',
           errorMessage: 'Invalid email or password.',
           oldInput: {
-            email: email,
-            password: password
+            ngoemail: ngoemail,
+            ngopassword: ngopassword
           },
           validationErrors: []
         });
       }
       bcrypt
-        .compare(password, user.password)
+        .compare(ngopassword, ngo.ngopassword)
         .then(doMatch => {
           if (doMatch) {
             req.session.isLoggedIn = true;
-            req.session.user = user;
+            req.session.ngo = ngo;
             return req.session.save(err => {
               console.log(err);
               res.redirect('/');
@@ -369,8 +369,8 @@ exports.postNgoLogin = (req, res, next) => {
             pageTitle: 'NGO Login',
             errorMessage: 'Invalid email or password.',
             oldInput: {
-              email: email,
-              password: password
+              ngoemail: ngoemail,
+              ngopassword: ngopassword
             },
             validationErrors: []
           });
@@ -389,8 +389,8 @@ exports.postNgoLogin = (req, res, next) => {
 
 
 exports.postNgoSignup = (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const ngoemail = req.body.ngoemail;
+  const ngopassword = req.body.ngopassword;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -400,23 +400,23 @@ exports.postNgoSignup = (req, res, next) => {
       pageTitle: 'NGO Signup',
       errorMessage: errors.array()[0].msg,
       oldInput: {
-        email: email,
-        password: password,
-        confirmPassword: req.body.confirmPassword
+        ngoemail: ngoemail,
+        ngopassword: ngopassword,
+        ngoconfirmPassword: req.body.ngoconfirmPassword
       },
       validationErrors: errors.array()
     });
   }
 
   bcrypt
-    .hash(password, 12)
+    .hash(ngopassword, 12)
     .then(hashedPassword => {
-      const user = new User({
-        email: email,
-        password: hashedPassword,
+      const ngo = new Ngo({
+        ngoemail: ngoemail,
+        ngopassword: hashedPassword,
         cart: { items: [] }
       });
-      return user.save();
+      return ngo.save();
     })
     .then(result => {
       res.redirect('/ngo-login');
