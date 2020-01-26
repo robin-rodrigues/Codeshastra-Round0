@@ -18,14 +18,16 @@
                     <a class="<%= path === '/admin/ngos' ? 'active' : '' %>" href="/admin/ngos">NGOs
                     </a>
                 </li>
-                <li class="main-header__item">
-                    <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
-                    </a>
-                </li>
             <% } %>
         </ul>
         <ul class="main-header__item-list">
             <% if (!isAuthenticated) { %>
+                <li class="main-header__item">
+                    <a class="<%= path === '/ngo-login' ? 'active' : '' %>" href="/ngo-login">NGO Login</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/ngo-signup' ? 'active' : '' %>" href="/ngo-signup">NGO Signup</a>
+                </li>
                 <li class="main-header__item">
                     <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
                 </li>

@@ -3,20 +3,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ngoSchema = new Schema({
-  name: {
+  ngoemail: {
     type: String,
     required: true
   },
-  city: {
+  ngopassword: {
     type: String,
     required: true
   },
-  address: {
-    type: String
-  },
-  sectors: {
-      type: String
-  }
+  resetToken: String,
+  resetTokenExpiration: Date
   
 });
 

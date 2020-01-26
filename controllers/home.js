@@ -210,8 +210,12 @@ exports.postOrder = (req, res, next) => {
     });
 };
 
+exports.getNotifications = (req,res,next) => {
+  res.render('shop/notifications');
+}
+
 exports.getOrders = (req, res, next) => {
-  Order.find({ 'user.userId': req.user._id })
+  Order.find({})
     .then(orders => {
       res.render('shop/orders', {
         path: '/orders',

@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
@@ -8,6 +6,8 @@ const sendgridTransport = require('nodemailer-sendgrid-transport');
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
+const Ngo = require('../models/ngo');
+
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
@@ -281,3 +281,156 @@ exports.postNewPassword = (req, res, next) => {
       return next(error);
     });
 };
+
+exports.getNgoLogin = (req, res, next) => {
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/ngo-login', {
+    path: '/ngo-login',
+    pageTitle: 'NGO Login',
+    errorMessage: message,
+    oldInput: {
+      email: '',
+      password: ''
+    },
+    validationErrors: []
+  });
+};
+
+exports.getNgoSignup = (req, res, next) => {
+  let message = req.flash('error');
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+  res.render('auth/ngo-signup', {
+    path: '/ngo-signup',
+    pageTitle: 'NGO Signup',
+    errorMessage: message,
+    oldInput: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    validationErrors: []
+  });
+};
+
+exports.postNgoLogin = (req, res, next) => {
+  const ngoemail = req.body.ngoemail;
+  const ngopassword = req.body.ngopassword;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render('auth/ngo-login', {
+      path: '/ngo-login',
+      pageTitle: 'NGO Login',
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        ngoemail: ngoemail,
+        ngopassword: ngopassword
+      },
+      validationErrors: errors.array()
+    });
+  }
+
+  Ngo.findOne({ ngoemail: ngoemail })
+    .then(ngo => {
+      if (!ngo) {
+        return res.status(422).render('auth/ngo-login', {
+          path: '/ngo-login',
+          pageTitle: 'NGO Login',
+          errorMessage: 'Invalid email or password.',
+          oldInput: {
+            ngoemail: ngoemail,
+            ngopassword: ngopassword
+          },
+          validationErrors: []
+        });
+      }
+      bcrypt
+        .compare(ngopassword, ngo.ngopassword)
+        .then(doMatch => {
+          if (doMatch) {
+            req.session.isLoggedIn = true;
+            req.session.ngo = ngo;
+            return req.session.save(err => {
+              console.log(err);
+              res.redirect('/');
+            });
+          }
+          return res.status(422).render('auth/ngo-login', {
+            path: '/ngo-login',
+            pageTitle: 'NGO Login',
+            errorMessage: 'Invalid email or password.',
+            oldInput: {
+              ngoemail: ngoemail,
+              ngopassword: ngopassword
+            },
+            validationErrors: []
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          res.redirect('/ngo-login');
+        });
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
+
+exports.postNgoSignup = (req, res, next) => {
+  const ngoemail = req.body.ngoemail;
+  const ngopassword = req.body.ngopassword;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render('auth/ngo-signup', {
+      path: '/ngo-signup',
+      pageTitle: 'NGO Signup',
+      errorMessage: errors.array()[0].msg,
+      oldInput: {
+        ngoemail: ngoemail,
+        ngopassword: ngopassword,
+        ngoconfirmPassword: req.body.ngoconfirmPassword
+      },
+      validationErrors: errors.array()
+    });
+  }
+
+  bcrypt
+    .hash(ngopassword, 12)
+    .then(hashedPassword => {
+      const ngo = new Ngo({
+        ngoemail: ngoemail,
+        ngopassword: hashedPassword,
+      });
+      return ngo.save();
+    })
+    .then(result => {
+      res.redirect('/ngo-login');
+      // return transporter.sendMail({
+      //   to: email,
+      //   from: 'shop@node-complete.com',
+      //   subject: 'Signup succeeded!',
+      //   html: '<h1>You successfully signed up!</h1>'
+      // });
+    })
+    .catch(err => {
+      const error = new Error(err);
+      console.log(error);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+

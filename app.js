@@ -15,6 +15,8 @@ const errorController = require('./controllers/error');
 const shopController = require('./controllers/home');
 const isAuth = require('./middleware/is-auth');
 const User = require('./models/user');
+const Ngo = require('./models/ngo');
+
 
 
 const app = express();
@@ -86,6 +88,24 @@ app.use((req, res, next) => {
         return next();
       }
       req.user = user;
+      next();
+    })
+    .catch(err => {
+      next(new Error(err));
+    });
+});
+
+app.use((req, res, next) => {
+  // throw new Error('Sync Dummy');
+  if (!req.session.ngo) {
+    return next();
+  }
+  Ngo.findById(req.session.ngo._id)
+    .then(ngo => {
+      if (!ngo) {
+        return next();
+      }
+      req.ngo = ngo;
       next();
     })
     .catch(err => {

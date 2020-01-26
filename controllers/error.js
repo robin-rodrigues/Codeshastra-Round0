@@ -7,6 +7,7 @@ exports.get404 = (req, res, next) => {
 };
 
 exports.get500 = (req, res, next) => {
+  console.log(req.body);
   res.status(500).render('500', {
     pageTitle: 'Error!',
     path: '/500',
