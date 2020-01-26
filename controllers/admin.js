@@ -74,6 +74,7 @@ exports.postAddProfile = (req, res, next) => {
     imageUrl: imageUrl,
     userId: req.user
   });
+  
   profile
     .save()
     .then(result => {
@@ -101,6 +102,14 @@ exports.postAddProfile = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+    Ngo.updateMany({city: "Mumbai"},{
+      $set: {notifications:{items: [{"profileId":profile}]}}
+    }).then(
+      ngo => {
+        console.log("hi");
+        console.log(ngo)
+      }
+    )
 };
 
 exports.getEditProduct = (req, res, next) => {

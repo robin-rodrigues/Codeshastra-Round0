@@ -11,8 +11,19 @@ const ngoSchema = new Schema({
     type: String,
     required: true
   },
+  city: String,
   resetToken: String,
-  resetTokenExpiration: Date
+  resetTokenExpiration: Date,
+  notifications: {
+    items: [
+      {
+        profileId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Profile'
+        }
+      }
+    ]
+  }
   
 });
 
